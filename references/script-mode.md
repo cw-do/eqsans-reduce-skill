@@ -169,9 +169,12 @@ stitching, into `<shared>/output`."*
    sample with a low-Q transmission. When the user hands you a
    sample → transmission mapping, apply it by index to both lists, or ask which
    configuration it is for.
-4. **Placeholder transmission titles are common** (`T-s1`, `T-sample3`). Trust
-   the user's mapping over the titles, and put the mapping in the script's
-   docstring so the next reader knows why `T-s3` is `L62_0p12`.
+4. **Placeholder transmission titles are common** (`T-s1`, `T-sample3`). The
+   fix belongs in the session, not the script: `/retitle s1 L62_0` … then
+   `/matchruns` — one `/retitle` corrects the slot in every configuration and
+   `/matchruns` re-pairs by title. Only build the mapping into the script when
+   there is no session to fix; then put it in the docstring so the next reader
+   knows why `T-s3` is `L62_0p12`.
 5. **Label repeated and partial blocks.** A temperature series often repeats a
    block (40 C and 55 C measured twice) and ends mid-block. Same label → same
    output filename → silent overwrite. Suffix repeats (`_rep2`); where one

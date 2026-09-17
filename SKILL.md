@@ -143,7 +143,8 @@ before launch).
 | Thousands of output files | Expected for slicing: `{sample}_{config}_{slice}_frame_{0,1}_Iq.dat` per slice |
 | 30 Hz frame skipping | Two files per run, `_frame_0` (low-Q) and `_frame_1` (high-Q); both stitch entries |
 | Reduction refuses to start | Output dir not writable, or a row has no empty beam — the message names the rows |
+| `/set --sample <pat>` hit rows it should not have | A trailing `*` over-matches when sample names are prefixes of each other — `L62_0*` also catches `L62_0p06`, `L62_0p12`, `L62_0p18`, `L62_0p24`. Check with `/show table --sample <pat>` before any bulk `/set` |
 | Script batch dies partway through | `reduceNow()` raises `SystemExit` on a failed run — wrap it in try/except, see `references/script-mode.md` |
 | Calibration returns NaN or a handful of points | The Q window is outside that config's measured range — `/calibrate`'s default `[0.01, 0.03]` is below a 2.5 m/2.5 Å curve (starts ~0.023) |
 | Sample paired with the wrong transmission | A sample usually has one transmission run **per configuration** — build one mapping per config, not one global |
-| Titles like `T-s1`, `T-sample3` | Placeholder transmission names. Trust the user's sample mapping over the titles, and record it in the script/session |
+| Transmissions titled by slot, not sample (`T-s1` vs `S-L62_0`) — no row matches | **Fix the titles, not the rows:** `/retitle s1 L62_0` … then `/matchruns`. One `/retitle` corrects that slot in *every* config (`T-s1` at 4 m and at 2.5 m), and `/matchruns` pairs by title, so each config gets its own transmission. Whole-word by default, so `s1` never touches `s10`. Patching rows with `/set` instead is what produces the mess below — and the next `/matchruns` discards it |
