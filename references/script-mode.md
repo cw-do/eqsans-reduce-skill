@@ -112,6 +112,10 @@ There is no `/calibrate` here — reproduce it in the script:
    *reference* Q points with the measured curve interpolated onto them
    (`np.interp(..., left=np.nan, right=np.nan)`, then keep finite and positive).
 3. Feed the number back as `_standardabsolutescale` for that configuration.
+   Every configuration gets its own factor from its own porsil run — a "reference
+   configuration" is only the stitch target, never the sole calibrated config.
+4. Verify: re-reduce porsil with the new factor; the same ratio must now be ~1.0,
+   and the configurations should overlap before any stitch scaling.
 
 Reference standards (NG3 is the default), 4 columns `Q I dI dQ`, `#`-commented,
 read with `np.loadtxt(f, comments='#')`:
